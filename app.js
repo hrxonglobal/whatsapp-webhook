@@ -1,34 +1,56 @@
-const express = require("express");
-const app = express();
+import express from "express";
+import fetch from "node-fetch";
 
+const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = "12345";
+const VERIFY_TOKEN = "mytoken";
+const ACCESS_TOKEN = "EAANLmJjtiW0BQjrFi3sboIcoGvzDT6I9mYGpOFFGs9SadaZBQmQnaaOkePChjaLSeOZAIntF64FIBA3P0wiqjpEbP3qY8sGuXC3UGVnRzAFZC2RSi7SpboXALpw3xQZCnpTH0dlkxZAw8nFVS9yGcfM15DjTILks03zxKOCrmA5VbEZA8Ov8ydx9R0gZBrCSpKa0T1jtABo4rHcBeovaSanPlKH6qNh9S6aZCNkZA1XqA0HsdE1tvi23MF7MmEbfMVcpbuM2ZCGuTbCfNdJ4tXlaZCg9Rgts3bCrkqrzfsYH7QZD";
 
-// Home route test
-app.get("/", (req, res) => {
-  res.send("WHATSAPP WEBHOOK WORKING");
-});
-
-// WhatsApp webhook verification
+// Verify webhook
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("Webhook verified");
     return res.status(200).send(challenge);
-  } else {
-    return res.sendStatus(403);
+  }
+  res.sendStatus(403);
+});
+
+// Receive message & auto reply
+app.post("/webhook", async (req, res) => {
+  try {
+    const entry = req.body.entry?.[0];
+    const changes = entry?.changes?.[0];
+    const message = changes?.value?.messages?.[0];
+
+    if (message) {
+      const from = message.from;
+      const phoneId = changes.value.metadata.phone_number_id;
+
+      await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: from,
+          text: {
+            body: "Hello 👋\nThanks for contacting HRXON Global IT Solutions.\nWe will reply shortly.",
+          },
+        }),
+      });
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
   }
 });
 
-// Receive messages
-app.post("/webhook", (req, res) => {
-  console.log("Incoming:", JSON.stringify(req.body, null, 2));
-  res.sendStatus(200);
-});
-
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(8080, () => console.log("Server running on port 8080"));
