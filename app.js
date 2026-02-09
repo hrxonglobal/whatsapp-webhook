@@ -3,15 +3,12 @@ const app = express();
 
 app.use(express.json());
 
-// token from railway env
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "hrxon123";
 
-// home route
 app.get("/", (req, res) => {
   res.send("WHATSAPP WEBHOOK WORKING ✅");
 });
 
-// verification route
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -24,13 +21,11 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-// receive messages
 app.post("/webhook", (req, res) => {
-  console.log("Incoming:", JSON.stringify(req.body, null, 2));
+  console.log(req.body);
   res.sendStatus(200);
 });
 
-// VERY IMPORTANT — Railway PORT
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
