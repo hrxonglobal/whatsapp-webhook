@@ -3,15 +3,20 @@ const app = express();
 
 app.use(express.json());
 
-// Verify webhook
+// Test route
+app.get("/", (req, res) => {
+  res.send("Server running 🚀");
+});
+
+// WhatsApp webhook verify
 app.get("/webhook", (req, res) => {
-  const verify_token = "hrxon123";
+  const VERIFY_TOKEN = "hrxon123";
 
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (mode === "subscribe" && token === verify_token) {
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
     console.log("Webhook verified");
     return res.status(200).send(challenge);
   } else {
@@ -26,4 +31,4 @@ app.post("/webhook", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running on port", PORT));
+app.listen(PORT, () => console.log("Server started on port " + PORT));
