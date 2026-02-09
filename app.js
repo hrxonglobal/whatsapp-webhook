@@ -3,12 +3,9 @@ const app = express();
 
 app.use(express.json());
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "hrxon123";
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
-app.get("/", (req, res) => {
-  res.send("WHATSAPP WEBHOOK WORKING ✅");
-});
-
+// webhook verify
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -21,13 +18,11 @@ app.get("/webhook", (req, res) => {
   }
 });
 
+// webhook message receive
 app.post("/webhook", (req, res) => {
-  console.log(req.body);
+  console.log("Webhook event:", req.body);
   res.sendStatus(200);
 });
 
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port " + PORT);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Server running on port " + PORT));
