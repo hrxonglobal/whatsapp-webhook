@@ -4,7 +4,6 @@ const app = express();
 app.use(express.json());
 
 const VERIFY_TOKEN = "123456";
-const ACCESS_TOKEN = "EAANLmJjtiW0BQkZAZADewozf1gITxRzhTEC8CZCTljVBdlgS0IZCbJrtOm67dyu6hhmgIeRPc05msILVeQInXHwThIMwqqZCDJLwCYAWr5J4joyqUUbtiMgPO3WvgZAXDz6hSnF0b5eNxZCMdIeu2QBIRYhAd6Mh2LHHjHFP5ttqZBzltifM6cvTb4pHpOIatJX67KZB0qN3RSX4pVKBgFeGtJk2fjl19iyKZCT2qOcxByZASLl5JZC8Ud8p3dgdqy0gySAUZBd1jVY1SfLsfUgH5HB3gRGQt2aCFvcmMLrATdwZDZD";
 
 // Verify webhook
 app.get("/webhook", (req, res) => {
