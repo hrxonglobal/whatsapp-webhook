@@ -1,26 +1,32 @@
 const express = require("express");
 const app = express();
 
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "12345";
+
 app.use(express.json());
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+// Home route
+app.get("/", (req, res) => {
+  res.send("WhatsApp Webhook Running ✅");
+});
 
-// webhook verify
+// Webhook verification
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    return res.status(200).send(challenge);
+    console.log("Webhook verified");
+    res.status(200).send(challenge);
   } else {
-    return res.sendStatus(403);
+    res.sendStatus(403);
   }
 });
 
-// webhook message receive
+// Receive messages
 app.post("/webhook", (req, res) => {
-  console.log("Webhook event:", req.body);
+  console.log("Message received:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
 
