@@ -3,15 +3,15 @@ const app = express();
 
 app.use(express.json());
 
-const VERIFY_TOKEN = "hrxon123";
-
-// Home route
+// Root test
 app.get("/", (req, res) => {
-  res.send("HRXON WhatsApp Webhook Running ✅");
+  res.send("HRXON Webhook Running ✅");
 });
 
-// Webhook verify route
+// Webhook verification
 app.get("/webhook", (req, res) => {
+  const VERIFY_TOKEN = "hrxon123";
+
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
@@ -23,13 +23,11 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-// Webhook receive messages
+// Receive messages
 app.post("/webhook", (req, res) => {
-  console.log("Webhook event:", JSON.stringify(req.body, null, 2));
+  console.log("Message:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
-});
+app.listen(PORT, () => console.log("Server running on port", PORT));
