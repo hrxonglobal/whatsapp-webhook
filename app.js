@@ -3,31 +3,31 @@ const app = express();
 
 app.use(express.json());
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "hrxon123";
 
-// Webhook verification (Meta GET request)
+// Webhook verification
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("Webhook verified successfully");
+    console.log("Webhook verified");
     return res.status(200).send(challenge);
   } else {
     return res.sendStatus(403);
   }
 });
 
-// Receive WhatsApp messages
+// Receive messages
 app.post("/webhook", (req, res) => {
-  console.log("Incoming webhook:", JSON.stringify(req.body, null, 2));
+  console.log("Incoming:", JSON.stringify(req.body, null, 2));
   res.sendStatus(200);
 });
 
-// Root test route
+// Root route
 app.get("/", (req, res) => {
-  res.send("WhatsApp Webhook Server Running 🚀");
+  res.send("WhatsApp Webhook Running 🚀");
 });
 
 const PORT = process.env.PORT || 3000;
