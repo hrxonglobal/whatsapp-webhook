@@ -1,26 +1,25 @@
-import express from "express";
-import fetch from "node-fetch";
+const express = require("express");
+const fetch = require("node-fetch");
 
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = "123456";   // Meta webhook verify token
-const ACCESS_TOKEN = "EAANLmJjtiW0BQgeoQQrJ9xYD8BiRIiogxPqQEBi5j2ZBXg4vxWpg29XI4yZCLosxBhQ62KbqbK6IJW6ql23roPhZCcRU4kXmgPMMZA2TZAoagZA2n3GGehYj0sqESN0gCzscaYZBLyRO1FZCi37HJFUNxlx5qPXyY6fUp52Y90hOdDZCOoNvzPpwDmFDTjscyJ0lZB6gZDZD";  // Permanent token
+const VERIFY_TOKEN = "123456";
+const ACCESS_TOKEN = "EAANLmJjtiW0BQhYJPZCZAHUykqJCRzrdHNZBcf3gdUIicqbf2xupZCH7ZBaga3g38ZA7vEH5VvK73VDKZC2M0EhkC02dUayowem4M7ffi3gOw0odX7yVZBgb5wuJ8ZALspjgsZAJZAxyOmvaEohGEzJQX1XuLU9TyuS94xSQwh339ZBDkMvBsTr16ndKZBwqZAjZBhD6Ck3JgZDZD";
 
-// 🔹 Webhook verification
+// Verify webhook
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("Webhook verified");
     return res.status(200).send(challenge);
   }
   return res.sendStatus(403);
 });
 
-// 🔹 Receive message + auto reply
+// Receive message & auto reply
 app.post("/webhook", async (req, res) => {
   try {
     const entry = req.body.entry?.[0];
@@ -45,13 +44,11 @@ app.post("/webhook", async (req, res) => {
           },
         }),
       });
-
-      console.log("Reply sent to:", from);
     }
 
     res.sendStatus(200);
   } catch (err) {
-    console.error("Webhook error:", err);
+    console.error(err);
     res.sendStatus(500);
   }
 });
