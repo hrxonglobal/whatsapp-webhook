@@ -1,13 +1,14 @@
 {
   "name": "whatsapp-webhook",
   "version": "1.0.0",
-  "description": "WhatsApp Auto Reply Webhook",
+  "description": "WhatsApp Auto Reply Bot",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "node-fetch": "^2.6.9"
+    "node-fetch": "^3.3.2"
   }
 }
