@@ -7,7 +7,6 @@ app.use(express.json());
 const VERIFY_TOKEN = "123456";
 const ACCESS_TOKEN = "EAANLmJjtiW0BQhYJPZCZAHUykqJCRzrdHNZBcf3gdUIicqbf2xupZCH7ZBaga3g38ZA7vEH5VvK73VDKZC2M0EhkC02dUayowem4M7ffi3gOw0odX7yVZBgb5wuJ8ZALspjgsZAJZAxyOmvaEohGEzJQX1XuLU9TyuS94xSQwh339ZBDkMvBsTr16ndKZBwqZAjZBhD6Ck3JgZDZD";
 
-// Verify webhook
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -19,7 +18,6 @@ app.get("/webhook", (req, res) => {
   return res.sendStatus(403);
 });
 
-// Receive message & auto reply
 app.post("/webhook", async (req, res) => {
   try {
     const entry = req.body.entry?.[0];
